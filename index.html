@@ -1,0 +1,72 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>WebApp</title>
+        <meta name="description" content="説明文">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="manifest" href="site.webmanifest">
+        <link rel="apple-touch-icon" href="icon.png">
+        <!-- favicon.icoはルートディレクトに配置 -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="input-area">
+            <a id="item-btn-A">ボタン１</a>
+            <a id="item-btn-B">ボタン２</a>
+              <div id="input-btn" class="disabled">入力</div>
+              <div id="reset-btn" class="disabled">リセット</div>
+          </div>
+          <div class="result-area">
+              <span id="result-item-A"></span>
+              <span id="result-item-B"></span>
+          </div>
+        <div class="spreadsheet">
+          <div class="spread-area">
+            <span id="spread-item-A"></span>
+            <span id="spread-item-B"></span>
+          </div>
+        </div>
+
+        <input type="button" value="行追加" onclick="insertRow('table_f')" />
+        <table id="table_f">
+          <thead>
+            <tr>
+              <th>修正ボタン</th>
+              <th>ボタン１</th>
+              <th>ボタン２</th>
+            </tr>
+          </thead>
+          <tbody contenteditable = "true">
+              <tr>
+                  <td nowrap><input type="button" value="修正"
+                      onclick="updateRow(this)" /></td>
+                  <td nowrap>1-1</td>
+                  <td nowrap>1-2</td>
+              </tr>
+              <tr>
+                  <td nowrap><input type="button" value="修正"
+                      onclick="updateRow(this)" /></td>
+                  <td nowrap>2-1</td>
+                  <td nowrap>2-2</td>
+              </tr>
+              <tr>
+                  <td nowrap><input type="button" value="修正"
+                      onclick="updateRow(this)" /></td>
+                  <td nowrap>3-1</td>
+                  <td nowrap>3-2</td>
+              </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/table.js"></script>
+    </body>
+</html>
