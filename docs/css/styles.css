@@ -7,7 +7,7 @@ body {
 }
 
 .container {
-  width: 500px;
+  width: 600px;
   margin: 25px auto;
   -ms-user-select: none;
     -webkit-user-select: none;
@@ -21,7 +21,8 @@ body {
 }
 
 #item-btn-A,
-#item-btn-B {
+#item-btn-B,
+#item-btn-C {
   cursor: pointer;
   display: inline-block;
   box-sizing: border-box;
@@ -66,7 +67,8 @@ body {
 }
 
 #result-item-A,
-#result-item-B {
+#result-item-B,
+#result-item-C {
   display: inline-block;
   box-sizing: border-box;
   width: 110px;
@@ -108,29 +110,22 @@ table tr th {
     text-align: center;
     font-weight: bold;
     font-size: 13px;
+    color: #434343;
 }
 
 table tr td {
+    font-size: 13px;
+    color: #cccccc;
     padding: 3px 10px;
     vertical-align: middle;
     background: #f8f8f8
 }
 
-
-
-
-#spread-item-A,
-#spread-item-B {
-  cursor: pointer;
-  display: inline-block;
-  box-sizing: border-box;
-  width: 110px;
-  height: 40px;
-  padding: 10px;
-  background: #f8f8f8;
-  border-radius: 5px;
-  font-size: 14px;
-  text-align: center;
+#count {
   color: #434343;
-  margin-right: 10px;
+}
+
+#getcell {
+  color: #ef7373;
+  font-weight: bold;
 }

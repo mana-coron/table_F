@@ -18,39 +18,38 @@
 
         <div class="container">
           <div class="input-area">
-            <a id="item-btn-A">ボタン１</a>
-            <a id="item-btn-B">ボタン２</a>
+            <a id="item-btn-A">F2</a>
+            <a id="item-btn-B">F3</a>
+            <a id="item-btn-C">S3</a>
               <div id="input-btn">入力</div>
               <div id="reset-btn">リセット</div>
           </div>
           <div class="result-area">
               <span id="result-item-A"></span>
               <span id="result-item-B"></span>
+              <span id="result-item-C"></span>
           </div>
-        <div class="spreadsheet">
-          <div class="spread-area">
-            <span id="spread-item-A"></span>
-            <span id="spread-item-B"></span>
-          </div>
-        </div>
 
         <table id="table_f" border="1">
           <thead>
             <tr>
+              <th>平均</th>
+              <th id="formula1"></th>
+              <th id="formula2"></th>
+              <th id="formula3"></th>
+            </tr>
+            <tr>
               <th>回数</th>
-              <th>ボタン１</th>
-              <th>ボタン２</th>
-              <th>修正ボタン</th>
+              <th>F2</th>
+              <th>F3</th>
+              <th>S3</th>
             </tr>
           </thead>
-          <tbody id="table_f_body" contenteditable = "true">
-
-
+          <tbody id="table_f_body" >
           </tbody>
         </table>
         </div>
 
         <script type="text/javascript" src="js/main.js"></script>
-        <script type="text/javascript" src="js/table.js"></script>
     </body>
 </html>
