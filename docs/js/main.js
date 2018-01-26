@@ -72,6 +72,23 @@ window.onload = function(){
 
 inputBtn.addEventListener('click', function() {
   dataSave();
+
+  var sum = tatecalc("table_f_body", 0, 1, 2, 3); //td[0], td[1], td[4] の合計値が配列で返ってくる
+
+  if (sum) { //非対応ブラウザの時は false が返ってくるので確認
+    total1.innerHTML = sum[1];
+    total2.innerHTML = sum[2];
+    total3.innerHTML = sum[3];
+    
+    for(var i = 1; i < 4; i++) {
+      var n = 2 ;	// 小数点第n位まで残す
+      sum[i] = Math.floor( (sum[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
+    }
+    formula1.innerHTML = sum[1] + "%";
+    formula2.innerHTML = sum[2] + "%";
+    formula3.innerHTML = sum[3] + "%";
+
+  }
 });
 
 resetBtn.addEventListener('click', function() {
@@ -79,58 +96,138 @@ resetBtn.addEventListener('click', function() {
 });
 
 
-
-//確率計算
+//計算
 var formula1 = document.getElementById('formula1');
 var formula2 = document.getElementById('formula2');
 var formula3 = document.getElementById('formula3');
+var total1 = document.getElementById('total1');
+var total2 = document.getElementById('total2');
+var total3 = document.getElementById('total3');
 
 
 
 
-function calcTbl() {
-var myTbl = document.getElementById('table_f');
- for(var i=1;i< myTbl.rows.length;i++){ // <tr>をループ（1行目は,見出し行でスキップ)
-   var num = 0; // セルの値 格納変数
-   var total = 0;// セルの合計値 格納変数
- for(var j=1;j< myTbl.rows[i].cells.length-1;j++){ // tr[i]行目のセルの数
-  num = myTbl.rows[i].cells[j].innerHTML; // tr[i]番目行のtd[j] 番目セルの値,取得
-  num = parseFloat(num); // 数値に変換
-　 num = num *1000;// 小数点問題 (-20.2+20=0.1999～)のような現象を回避
-    total += num; // 合計値
-      }
- total = total/1000;
-  document.getElementById("formula1").innerHTML = total; // 行の末尾のセルに合計値
-   myTbl.rows[i].cells[j].style.color="#cc00ff";
-       }
-    }
+function tatecalc(tableID) {
 
-if(length > 0) {
-  calcTbl();
+	//記述の手抜き用
+	var d = document;
+
+	//非対応ブラウザはなにもしない（最後のはタチの悪いOpera6を刎ねるための条件）
+	if (!d.getElementById || !d.getElementsByTagName || (window.opera && !d.createEvent))
+		return false;
+
+	//各<td>の合計値（<td>ごとに別で計算するので配列を使う）
+	var sum = new Array();
+
+	//<table id="ID名">を取得
+	var table = d.getElementById(tableID);
+
+	//<table>内の<tr>を全部取得（配列）
+	var tr = table.getElementsByTagName("tr");
+
+
+	//===== ループ開始 =====//
+
+	for (var i = 0; i < tr.length; i++) { //<tr>の数だけ繰り返し
+
+		//===== tr[i] から計算対象の<td>を取得 =====//
+
+		var td = tr[i].getElementsByTagName("td"); //i番目の<tr>内にある<td>を全部取得（配列）
+
+		if (!td || !td.length) //tr[i] に<td>が含まれなかったら次のループへ
+			continue;
+
+		//2個以上の引数を与えられてるか
+		if (arguments.length > 1) {
+			var temp = new Array(); //一時的な配列
+			for (var ii = 1; ii < arguments.length; ii++) { //引数[0] は tableID なので 引数[1] から開始
+				temp[temp.length] = td[arguments[ii]]; //td[ 引数[ii] ] の<td>を一時配列にコピー
+			}
+			td = temp; //<td>の配列を上書き。これによって引数にない列の<td>は消される
+		}
+
+		//===== <td>の合計値を列ごとに計算 =====//
+
+			//jは「左からj番目の<td>」に相当。つまり sum[0] は左から0番目の<td>の合計値を指す
+
+		for (var j = 1; j < td.length; j++) { //<td>の数だけ繰り返し
+
+			//<td>の内容を列ごとに分けて足していく
+			var num; //計算用の一時変数
+			if (!sum[j]) { //1回目のループでは sum[j] は空なので0を入れる
+				sum[j] = 0;
+			}
+
+				num = td[j].innerText;
+        // num = num.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g,'');
+				num = parseFloat(num); //数値に変換
+
+			sum[j] = sum[j] + num; //sum[j] に加算していく（td[j] の合計値になる）
+			//次の<td>ループへ
+		}
+		//次の<tr>ループへ
+	}
+
+
+
+	if (arguments.length == 1) { //引数がひとつの時のみ下のセルに結果を挿入
+
+		//新しい行を作る（これに結果の<td>を挿入していき、最後に<table>へ追加する）
+		var newtr = d.createElement("tr");
+		newtr.style.backgroundColor = "#dfd"; //背景色なんかつけてみる
+
+		var th = d.createElement("th"); //見出しセルを作る
+		var text = d.createTextNode("結果"); //<th>のテキスト
+		th.appendChild(text); //<th>にテキストを挿入
+		newtr.appendChild(th); //<tr>の最後に<th>を追加
+
+		//結果を入れた<td>を作って<tr>へ次々に追加していく
+		for (i = 0; i < sum.length; i++) {
+			text = (sum[i] >= 0) ? (sum[i] /1000) : ""; //sum[j] を小数に戻す
+			td = d.createElement("td");
+			td.appendChild(d.createTextNode(text)); //ちょっとズボラな書き方
+			newtr.appendChild(td);
+		}
+
+		//新しく作った<tr>を追加
+		var endtr = tr[tr.length -1]; //一番最後の<tr>
+		endtr.parentNode.insertBefore(newtr, endtr.nextSibling);
+
+		/* ちょっと解説
+		追加対象ノード.insertBefore(追加するノード, 追加する場所);
+
+		<table> ← endtr.parentNode（追加対象ノード）
+			<tr>
+				<td><\/td>
+			<\/tr>
+			<tr> ← endtr
+				<td><\/td>
+			<\/tr>
+			■ ← endtr.nextSibling（追加する場所）
+		<\/table>
+		*/
+	}
+
+	return sum; //配列sumを返す
 }
 
 
 
-//表データ
+
+
+
 var length = 0;
-
-
-
 
 function dataSave() {
       var i = -1;
 
-      // テーブル取得
       var tbody = document.getElementById("table_f_body");
-      // 行を行末に追加
       var row = tbody.insertRow(i);
-      // セルの挿入
       var cell1 = row.insertCell(i);
       var cell2 = row.insertCell(i);
       var cell3 = row.insertCell(i);
       var cell4 = row.insertCell(i);
 
-      // 行数取得
       length  ++;
 
       if(cntA > 0) {
@@ -144,7 +241,6 @@ function dataSave() {
       }
 
 
-      // セルの内容入力
       cell1.innerHTML = '<a id="count">' + length;
       cell2.innerHTML = cntA;
       cell3.innerHTML = cntB;
@@ -152,6 +248,7 @@ function dataSave() {
 
       dataReset();
   }
+
 
 
 
