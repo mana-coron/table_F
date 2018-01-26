@@ -33,18 +33,32 @@
         <table id="table_f" border="1">
           <thead>
             <tr>
-              <th>確率</th>
+              <th class="col0" rowspan="2">S3が出てから</th>
+              <th class="col1" id="t_title">確率</th>
+              <th class="col2" id="formulaS1">0%</th>
+              <th class="col3" id="formulaS2">0%</th>
+              <th class="col4" id="formulaS3">0%</th>
+            </tr>
+            <tr>
+              <th id="t_title">合計</th>
+              <th id="totalS1">0</th>
+              <th id="totalS2">0</th>
+              <th id="totalS3">0</th>
+            </tr>
+              <th rowspan="2">累計</th>
+              <th id="t_title">確率</th>
               <th id="formula1">0%</th>
               <th id="formula2">0%</th>
               <th id="formula3">0%</th>
             </tr>
             <tr>
-              <th>合計</th>
+              <th id="t_title">合計</th>
               <th id="total1">0</th>
               <th id="total2">0</th>
               <th id="total3">0</th>
             </tr>
-            <tr>
+            <tr id="tf_title">
+              <th>日付</th>
               <th>回数</th>
               <th>F2</th>
               <th>F3</th>
@@ -52,6 +66,13 @@
             </tr>
           </thead>
           <tbody id="table_f_body" >
+            <tr class="t_null">
+              <td class="col0">0</td>
+              <td class="col1">0</td>
+              <td class="col2">0</td>
+              <td class="col3">0</td>
+              <td class="col4">0</td>
+            </tr>
           </tbody>
         </table>
         </div>

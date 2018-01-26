@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 body {
-  background: #ccc;
+  background: #fff;
   font-size: 16px;
   font-family: Arial, sans-serif;
 }
@@ -97,6 +97,11 @@ body {
   color: #434343;
 }
 
+table .t_null {
+  margin: 0;
+  padding: 0;
+}
+
 table {
     color: #434343;
     width: 100%;
@@ -104,10 +109,29 @@ table {
     border-collapse: collapse;
 }
 
+table thead,
+table tbody {
+    display: block;
+}
+
+table tbody {
+    overflow-y: scroll;
+    height: 450px;        /* 高さはお好みで */
+}
+
+#t_title {
+  text-align: right;
+}
+
+#tf_title th {
+  text-align: center;
+}
+
+
 table tr th {
     background: #f2f2f2;
     padding: 6px 10px;
-    text-align: center;
+    text-align: right;
     font-weight: bold;
     font-size: 13px;
     color: #434343;
@@ -116,10 +140,19 @@ table tr th {
 table tr td {
     font-size: 13px;
     color: #cccccc;
+    text-align: center;
     padding: 3px 10px;
     vertical-align: middle;
-    background: #f8f8f8
+    background: #fff
 }
+
+/* 各列の幅を設定 */
+table .col0 { width: 110px;  }
+table .col1 { width: 100px;  }
+table .col2 { width: 70px;  }
+table .col3 { width: 70px; }
+table .col4 { width: 70px;  }
+
 
 #count {
   color: #434343;
