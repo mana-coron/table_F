@@ -73,6 +73,16 @@ window.onload = function(){
 
 inputBtn.addEventListener('click', function() {
   dataSave();
+
+  var i = -1
+  var tbody = document.getElementById("table_f_body");
+  var tr = tbody.getElementsByTagName("tr");
+  var td = tr[0].getElementsByTagName("td");
+  var getC = td[4].innerText;
+  getC = parseFloat(getC); //数値に変換
+  if(getC > 0) {
+    cntS = 0;
+    }
   cntS ++;
 
   var sum = tatecalc("table_f_body", 0, 1, 2, 3, 4); //td[0], td[1], td[4] の合計値が配列で返ってくる
@@ -91,29 +101,24 @@ inputBtn.addEventListener('click', function() {
     formula3.innerHTML = sum[3] + "%";
   }
 
-  var i = -1
-  var tbody = document.getElementById("table_f_body");
-  var tr = tbody.getElementsByTagName("tr");
-  var td = tr[0].getElementsByTagName("td");
-  var getC = td[4].innerText;
-  getC = parseFloat(getC); //数値に変換
+  var sumS = Scalc("table_f_body", 0, 1, 2, 3, 4);
 
-  if(getC > 0) {
-    var sumS = Scalc("table_f_body", 0, 1, 2, 3, 4); //td[0], td[1], td[4] の合計値が配列で返ってくる
+  if (sumS) {
+    totalS1.innerHTML = sumS[1];
+    totalS2.innerHTML = sumS[2];
+    totalS3.innerHTML = sumS[3];
 
-    if (sumS) { //非対応ブラウザの時は false が返ってくるので確認
-      totalS1.innerHTML = sumS[1];
-      totalS2.innerHTML = sumS[2];
-      totalS3.innerHTML = sumS[3];
-
-      for(var i = 1; i < 5; i++) {
-        var n = 2 ;	// 小数点第n位まで残す
-        sumS[i] = Math.floor( (sumS[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
-      }
-      formulaS1.innerHTML = sumS[1] + "%";
-      formulaS2.innerHTML = sumS[2] + "%";
-      formulaS3.innerHTML = sumS[3] + "%";
+    for(var i = 1; i < 5; i++) {
+      var n = 2 ;	// 小数点第n位まで残す
+      sumS[i] = Math.floor( (sumS[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
     }
+    formulaS1.innerHTML = sumS[1] + "%";
+    formulaS2.innerHTML = sumS[2] + "%";
+    formulaS3.innerHTML = sumS[3] + "%";
+
+
+
+
   }
 
 });
@@ -253,7 +258,6 @@ function Scalc(tableID) {
 	//記述の手抜き用
 	var d = document;
 
-  cntS = 1;
 
 	//非対応ブラウザはなにもしない（最後のはタチの悪いOpera6を刎ねるための条件）
 	if (!d.getElementById || !d.getElementsByTagName || (window.opera && !d.createEvent))
