@@ -1,12 +1,49 @@
 (function() {
   'use strict';
 
+  // ウェブストレージに対応している
+  if(window.localStorage){
+
+  	// ------------------------------------------------------------
+  	// 書き込みテスト
+  	// ------------------------------------------------------------
+  	// 保存したい適当なオブジェクト
+  	var obj = {
+  		ary:[0,1,2],
+  		obj:{
+  			a:0,
+  			b:1,
+  			c:2
+  		}
+  	};
+
+  	// オブジェクトから JSON 文字列に変換
+  	var json_text = JSON.stringify(obj);
+
+  	// JSON 文字列を保存
+  	window.localStorage.setItem("test_key" , json_text);
+
+
+  	// ------------------------------------------------------------
+  	// 読み込みテスト
+  	// ------------------------------------------------------------
+  	// JSON 文字列を読み込み
+  	var str = window.localStorage.getItem("test_key");
+
+  	// JSON 文字列からオブジェクトに変換
+  	var obj = JSON.parse(str);
+
+  	// 出力テスト
+
+  }
+
 
 
 var cntA = 0;
 var cntB = 0;
 var cntC = 0;
 var cntS = 0;
+
 
 var inputBtn = document.getElementById('input-btn');
 var resetBtn = document.getElementById('reset-btn');
@@ -20,6 +57,9 @@ var itemBtnC = document.getElementById('item-btn-C');
 var resultItemA = document.getElementById('result-item-A');
 var resultItemB = document.getElementById('result-item-B');
 var resultItemC = document.getElementById('result-item-C');
+var editBtn = document.getElementById('editBtn');
+var extBtn = document.getElementById('extBtn');
+var deleteBtn = document.getElementById('deleteBtn');
 
 
 
@@ -52,6 +92,56 @@ function dataReset() {
   document.getElementById("result-item-C").innerHTML=cntC;
 
 }
+
+function dataEdit() {
+  var edit = document.getElementById("editBtn");
+  edit.innerText = "完了";
+  edit.setAttribute("ID", "doneBtn");
+    getCELL();
+
+  var done = document.getElementById("doneBtn");
+  doneBtn.addEventListener('click', function() {
+    done.innerText = "編集";
+    done.setAttribute("ID", "editBtn");
+  });
+}
+
+function getCELL(){
+   // var countgetCell ++;
+   //  if(countgetCell > 1) {
+   //    console.log('1');
+   //  } else {
+   //    console.log('0');
+   //  }
+   var myTbl = document.getElementById('table_f_body');
+  　for (var i=0; i<myTbl.rows.length; i++) {
+     for (var j=2; j<myTbl.rows[i].cells.length; j++) {
+  　　var Cells=myTbl.rows[i].cells[j];
+  　　 Cells.onclick =function(){Mclk(this);} // onclickで 'Mclk'を実行。
+           }
+         }
+}
+
+function Mclk(Cell) {
+  Cell.innerHTML = '<i class="fa fa-plus" aria-hidden="true"></i>' + Cell.innerText + '<i class="fa fa-minus" aria-hidden="true"></i>';
+  // countgetCell ++;
+}
+
+
+
+
+
+
+
+
+function dataDelete() {
+  dataReset();
+  length = 0;
+  var table = document.getElementById("table_f_body");
+  while (table.rows.length > 0) table.deleteRow(0);
+}
+
+
 
 
 
@@ -109,8 +199,8 @@ inputBtn.addEventListener('click', function() {
     totalS3.innerHTML = sumS[3];
 
     for(var i = 1; i < 5; i++) {
-      var n = 2 ;	// 小数点第n位まで残す
-      sumS[i] = Math.floor( (sumS[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
+      var n = 2 ;
+      sumS[i] = Math.floor( (sumS[i] / cntS*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
     }
     formulaS1.innerHTML = sumS[1] + "%";
     formulaS2.innerHTML = sumS[2] + "%";
@@ -126,6 +216,22 @@ inputBtn.addEventListener('click', function() {
 resetBtn.addEventListener('click', function() {
   dataReset();
 });
+
+
+//表の編集ボタン
+editBtn.addEventListener('click', function() {
+  dataEdit();
+});
+
+extBtn.addEventListener('click', function() {
+  dataExt();
+});
+
+deleteBtn.addEventListener('click', function() {
+  dataDelete();
+});
+
+
 
 
 //計算
@@ -393,9 +499,15 @@ function dataSave() {
       var hour = date.getHours();
       var minute = date.getMinutes();
 
+      cell0.className = 'col0'
+      cell1.className = 'col1'
+      cell2.className = 'col2 edit-cell'
+      cell3.className = 'col3 edit-cell'
+      cell4.className = 'col4 edit-cell'
+
 
       cell0.innerHTML = year + "/" + month + "/" + day + " " + hour + ":" + minute;
-      cell1.innerHTML = '<a class="col1" id="count" >' + length;
+      cell1.innerHTML = '<span id="count">' + length + '</span>';
       cell2.innerHTML = cntA;
       cell3.innerHTML = cntB;
       cell4.innerHTML = cntC;
@@ -403,6 +515,7 @@ function dataSave() {
 
       dataReset();
   }
+
 
 
 
