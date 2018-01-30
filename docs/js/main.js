@@ -7,7 +7,7 @@ function jsonGet() {
   var userData = localStorage.getItem('userDataStr');
   userData = JSON.parse(userData);
 
-  if(userData[0] == null){
+  if(!userData){
     localStorage.removeItem("userDataStr");
     var userData = [];
     localStorage.setItem('userDataStr', JSON.stringify(userData));
