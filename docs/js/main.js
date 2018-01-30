@@ -1,41 +1,102 @@
 (function() {
   'use strict';
 
-  // ウェブストレージに対応している
-  if(window.localStorage){
 
-  	// ------------------------------------------------------------
-  	// 書き込みテスト
-  	// ------------------------------------------------------------
-  	// 保存したい適当なオブジェクト
-  	var obj = {
-  		ary:[0,1,2],
-  		obj:{
-  			a:0,
-  			b:1,
-  			c:2
-  		}
-  	};
+function jsonGet() {
 
-  	// オブジェクトから JSON 文字列に変換
-  	var json_text = JSON.stringify(obj);
+  var userData = localStorage.getItem('userDataStr');
+  userData = JSON.parse(userData);
 
-  	// JSON 文字列を保存
-  	window.localStorage.setItem("test_key" , json_text);
+  if(userData[0]){
+    console.log(userData);
+    var tbody = document.getElementById("table_f_body");
+
+     for (var i = 0; i < userData.length; i++) {
+       var row = tbody.insertRow(0);
+       var cell0 = row.insertCell(-1);
+       var cell1 = row.insertCell(-1);
+       var cell2 = row.insertCell(-1);
+       var cell3 = row.insertCell(-1);
+       var cell4 = row.insertCell(-1);
 
 
-  	// ------------------------------------------------------------
-  	// 読み込みテスト
-  	// ------------------------------------------------------------
-  	// JSON 文字列を読み込み
-  	var str = window.localStorage.getItem("test_key");
+       cell0.className = 'col0'
+       cell1.className = 'col1'
+       cell2.className = 'col2 edit-cell'
+       cell3.className = 'col3 edit-cell'
+       cell4.className = 'col4 edit-cell'
 
-  	// JSON 文字列からオブジェクトに変換
-  	var obj = JSON.parse(str);
+       cell0.innerHTML = userData[i]["data"];
+       cell1.innerHTML =  '<span id="count">' + userData[i]["count"] +  '</span>';
+       cell2.innerHTML = userData[i]["F2"];
+       cell3.innerHTML = userData[i]["F3"];
+       cell4.innerHTML = userData[i]["S3"];
 
-  	// 出力テスト
+       //１以上のときは赤文字にする
+       if(cell2.innerText > 0) {
+         cell2.innerHTML = '<a id="getcell">' + cell2.innerHTML + '</a>'
+       }
+       if(cell3.innerText > 0) {
+         cell3.innerHTML = '<a id="getcell">' + cell3.innerHTML + '</a>'
+       }
+       if(cell4.innerText > 0) {
+         cntS = 0;
+         cell4.innerHTML = '<a id="getcell">' + cell4.innerHTML + '</a>'
+       }
+       cntS ++;
+   }
+   //計算表にjsonデータを反映
+   var tbody = document.getElementById("table_f_body");
+   var tr = tbody.getElementsByTagName("tr");
+   var td = tr[0].getElementsByTagName("td");
+   var getcount = td[1].innerText;
+   length = getcount;
 
+   //累計計算
+   var sum = tatecalc("table_f_body", 0, 1, 2, 3, 4); //td[0], td[1], td[4] の合計値が配列で返ってくる
+
+   if (sum) { //非対応ブラウザの時は false が返ってくるので確認
+     total1.innerHTML = sum[1];
+     total2.innerHTML = sum[2];
+     total3.innerHTML = sum[3];
+
+     for(var i = 1; i < 5; i++) {
+       var n = 2 ;	// 小数点第n位まで残す
+       sum[i] = Math.floor( (sum[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
+     }
+     formula1.innerHTML = sum[1] + "%";
+     formula2.innerHTML = sum[2] + "%";
+     formula3.innerHTML = sum[3] + "%";
+   }
+
+
+   //S3計算
+   console.log(cntS);
+
+   var sumS = Scalc("table_f_body", 0, 1, 2, 3, 4);
+
+   if (sumS) {
+     totalS1.innerHTML = sumS[1];
+     totalS2.innerHTML = sumS[2];
+     totalS3.innerHTML = sumS[3];
+
+     for(var i = 1; i < 5; i++) {
+       var n = 2 ;
+       sumS[i] = Math.floor( (sumS[i] / cntS*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
+     }
+     formulaS1.innerHTML = sumS[1] + "%";
+     formulaS2.innerHTML = sumS[2] + "%";
+     formulaS3.innerHTML = sumS[3] + "%";
+   }
+
+
+  } else {
+    localStorage.removeItem("userDataStr");
+    var userData = [];
+    localStorage.setItem('userDataStr', JSON.stringify(userData));
   }
+};
+
 
 
 
@@ -43,6 +104,7 @@ var cntA = 0;
 var cntB = 0;
 var cntC = 0;
 var cntS = 0;
+var day;
 
 
 var inputBtn = document.getElementById('input-btn');
@@ -135,10 +197,30 @@ function Mclk(Cell) {
 
 
 function dataDelete() {
-  dataReset();
-  length = 0;
-  var table = document.getElementById("table_f_body");
-  while (table.rows.length > 0) table.deleteRow(0);
+  var result = confirm('データを全て消去してよろしいですか？');
+
+    if(result) {
+      dataReset();
+      length = 0;
+      var table = document.getElementById("table_f_body");
+      while (table.rows.length > 0) table.deleteRow(0);
+      formula1.innerHTML = "0%";
+      formula2.innerHTML = "0%";
+      formula3.innerHTML = "0%";
+      formulaS1.innerHTML = "0%";
+      formulaS2.innerHTML = "0%";
+      formulaS3.innerHTML = "0%";
+      total1.innerHTML = 0;
+      total2.innerHTML = 0;
+      total3.innerHTML =0;
+      totalS1.innerHTML = 0;
+      totalS2.innerHTML = 0;
+      totalS3.innerHTML =0;
+      localStorage.removeItem("userDataStr");
+      var userData = [];
+      localStorage.setItem('userDataStr', JSON.stringify(userData));
+    }
+
 }
 
 
@@ -147,6 +229,7 @@ function dataDelete() {
 
 
 window.onload = function(){
+    jsonGet();
     document.getElementById("result-item-A").innerHTML=cntA;
     document.getElementById("result-item-B").innerHTML=cntB;
     document.getElementById("result-item-C").innerHTML=cntC;
@@ -205,10 +288,6 @@ inputBtn.addEventListener('click', function() {
     formulaS1.innerHTML = sumS[1] + "%";
     formulaS2.innerHTML = sumS[2] + "%";
     formulaS3.innerHTML = sumS[3] + "%";
-
-
-
-
   }
 
 });
@@ -480,6 +559,30 @@ function dataSave() {
 
       length  ++;
 
+      //日付取得
+      var date = new Date();
+      var year = date.getFullYear();
+      var month = date.getMonth()+1;
+      var day = date.getDate();
+      var hour = date.getHours();
+      var minute = date.getMinutes();
+      day = year + "/" + month + "/" + day + " " + hour + ":" + minute;
+
+
+      //jsonに保存
+      var userData = localStorage.getItem('userDataStr');
+      userData = JSON.parse(userData);
+
+      //json形式データを追加する
+      var addData =
+      {"data": day,"count": length,"F2": cntA,"F3": cntB,"S3": cntC};
+      userData.push(addData);
+
+     // 追加データごと格納
+      localStorage.setItem("userDataStr", JSON.stringify(userData));
+
+
+      //1以上のときは文字に装飾
       if(cntA > 0) {
         cntA = '<a id="getcell">' + cntA + '</a>'
       }
@@ -490,23 +593,14 @@ function dataSave() {
         cntC = '<a id="getcell">' + cntC + '</a>'
       }
 
-
-      //日付取得
-      var date=new Date();
-      var year = date.getFullYear();
-      var month = date.getMonth()+1;
-      var day = date.getDate();
-      var hour = date.getHours();
-      var minute = date.getMinutes();
-
-      cell0.className = 'col0'
-      cell1.className = 'col1'
-      cell2.className = 'col2 edit-cell'
-      cell3.className = 'col3 edit-cell'
-      cell4.className = 'col4 edit-cell'
+      cell0.className = 'col0';
+      cell1.className = 'col1';
+      cell2.className = 'col2 edit-cell';
+      cell3.className = 'col3 edit-cell';
+      cell4.className = 'col4 edit-cell';
 
 
-      cell0.innerHTML = year + "/" + month + "/" + day + " " + hour + ":" + minute;
+      cell0.innerHTML = day;
       cell1.innerHTML = '<span id="count">' + length + '</span>';
       cell2.innerHTML = cntA;
       cell3.innerHTML = cntB;
