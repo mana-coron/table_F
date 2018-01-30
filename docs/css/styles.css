@@ -28,15 +28,26 @@ body {
   cursor: pointer;
   display: inline-block;
   box-sizing: border-box;
+  text-decoration: none;
   width: 110px;
   height: 40px;
   padding: 10px;
-  background: #f8f8f8;
+  background: #668ad8;
   border-radius: 5px;
   font-size: 14px;
   text-align: center;
-  color: #434343;
+  color: #fff;
   margin-right: 10px;
+  border-bottom: solid 4px #627295;
+}
+
+#item-btn-A:active,
+#item-btn-B:active,
+#item-btn-C:active {
+    -ms-transform: translateY(4px);
+    -webkit-transform: translateY(4px);
+    transform: translateY(4px);/*下に動く*/
+    border-bottom: none;/*線を消す*/
 }
 
 #input-btn {
@@ -52,6 +63,7 @@ body {
   text-align: center;
   color: #fff;
   margin-right: 10px;
+  border-bottom: solid 4px #627295;
 }
 
 #reset-btn {
@@ -61,11 +73,20 @@ body {
   width: 110px;
   height: 40px;
   padding: 10px;
-  background: #3897fd;
+  background: #bcbcbc;
   border-radius: 5px;
   font-size: 14px;
   text-align: center;
   color: #fff;
+  border-bottom: solid 4px #627295;
+}
+
+#input-btn:active,
+#reset-btn:active {
+    -ms-transform: translateY(4px);
+    -webkit-transform: translateY(4px);
+    transform: translateY(4px);/*下に動く*/
+    border-bottom: none;/*線を消す*/
 }
 
 #result-item-A,
