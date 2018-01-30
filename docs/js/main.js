@@ -7,8 +7,12 @@ function jsonGet() {
   var userData = localStorage.getItem('userDataStr');
   userData = JSON.parse(userData);
 
-  if(userData[0]){
-    console.log(userData);
+  if(!userData[0]){
+    localStorage.removeItem("userDataStr");
+    var userData = [];
+    localStorage.setItem('userDataStr', JSON.stringify(userData));
+
+  } else {
     var tbody = document.getElementById("table_f_body");
 
      for (var i = 0; i < userData.length; i++) {
@@ -71,7 +75,6 @@ function jsonGet() {
 
 
    //S3計算
-   console.log(cntS);
 
    var sumS = Scalc("table_f_body", 0, 1, 2, 3, 4);
 
@@ -90,10 +93,6 @@ function jsonGet() {
    }
 
 
-  } else {
-    localStorage.removeItem("userDataStr");
-    var userData = [];
-    localStorage.setItem('userDataStr', JSON.stringify(userData));
   }
 };
 
