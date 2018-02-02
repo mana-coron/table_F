@@ -195,16 +195,20 @@ table tbody {
   text-align: center;
 }
 
-.fa-plus {
-  font-size: 13px;
+#plusBtn {
+  font-size: 10px;
   color: #afafaf;
-  padding-right: 15px;
+  padding: 0px 4px;
+  text-align: center;
+  margin-right: 8px;
 }
 
-.fa-minus {
-  font-size: 13px;
+#minusBtn {
+  font-size: 10px;
   color: #afafaf;
-  padding-left: 15px;
+  padding: 0px 4px;
+  text-align: center;
+  margin-left: 8px;
 }
 
 

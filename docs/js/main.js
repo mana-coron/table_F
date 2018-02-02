@@ -30,7 +30,7 @@ function jsonGet() {
        cell3.className = 'col3 edit-cell'
        cell4.className = 'col4 edit-cell'
 
-       cell0.innerHTML = userData[i]["data"];
+       cell0.innerHTML = userData[i]["date"];
        cell1.innerHTML =  '<span id="count">' + userData[i]["count"] +  '</span>';
        cell2.innerHTML = userData[i]["F2"];
        cell3.innerHTML = userData[i]["F3"];
@@ -49,54 +49,55 @@ function jsonGet() {
        }
        cntS ++;
    }
-   //計算表にjsonデータを反映
-   var tbody = document.getElementById("table_f_body");
-   var tr = tbody.getElementsByTagName("tr");
-   var td = tr[0].getElementsByTagName("td");
-   var getcount = td[1].innerText;
-   length = getcount;
-
-   //累計計算
-   var sum = tatecalc("table_f_body", 0, 1, 2, 3, 4); //td[0], td[1], td[4] の合計値が配列で返ってくる
-
-   if (sum) { //非対応ブラウザの時は false が返ってくるので確認
-     total1.innerHTML = sum[1];
-     total2.innerHTML = sum[2];
-     total3.innerHTML = sum[3];
-
-     for(var i = 1; i < 5; i++) {
-       var n = 2 ;	// 小数点第n位まで残す
-       sum[i] = Math.floor( (sum[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
-     }
-     formula1.innerHTML = sum[1] + "%";
-     formula2.innerHTML = sum[2] + "%";
-     formula3.innerHTML = sum[3] + "%";
-   }
-
-
-   //S3計算
-
-   var sumS = Scalc("table_f_body", 0, 1, 2, 3, 4);
-
-   if (sumS) {
-     totalS1.innerHTML = sumS[1];
-     totalS2.innerHTML = sumS[2];
-     totalS3.innerHTML = sumS[3];
-
-     for(var i = 1; i < 5; i++) {
-       var n = 2 ;
-       sumS[i] = Math.floor( (sumS[i] / cntS*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
-     }
-     formulaS1.innerHTML = sumS[1] + "%";
-     formulaS2.innerHTML = sumS[2] + "%";
-     formulaS3.innerHTML = sumS[3] + "%";
-   }
-
-
+   Recalculation();
   }
 };
 
+//再計算
+function Recalculation() {
+  var tbody = document.getElementById("table_f_body");
+  var tr = tbody.getElementsByTagName("tr");
+  var td = tr[0].getElementsByTagName("td");
+  var getcount = td[1].innerText;
+  length = getcount;
 
+  //累計計算
+  var sum = tatecalc("table_f_body", 0, 1, 2, 3, 4); //td[0], td[1], td[4] の合計値が配列で返ってくる
+
+  if (sum) { //非対応ブラウザの時は false が返ってくるので確認
+    total1.innerHTML = sum[1];
+    total2.innerHTML = sum[2];
+    total3.innerHTML = sum[3];
+
+    for(var i = 1; i < 5; i++) {
+      var n = 2 ;	// 小数点第n位まで残す
+      sum[i] = Math.floor( (sum[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
+    }
+    formula1.innerHTML = sum[1] + "%";
+    formula2.innerHTML = sum[2] + "%";
+    formula3.innerHTML = sum[3] + "%";
+  }
+
+
+  //S3計算
+
+  var sumS = Scalc("table_f_body", 0, 1, 2, 3, 4);
+
+  if (sumS) {
+    totalS1.innerHTML = sumS[1];
+    totalS2.innerHTML = sumS[2];
+    totalS3.innerHTML = sumS[3];
+
+    for(var i = 1; i < 5; i++) {
+      var n = 2 ;
+      sumS[i] = Math.floor( (sumS[i] / cntS*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
+    }
+    formulaS1.innerHTML = sumS[1] + "%";
+    formulaS2.innerHTML = sumS[2] + "%";
+    formulaS3.innerHTML = sumS[3] + "%";
+  }
+
+}
 
 
 var cntA = 0;
@@ -155,37 +156,133 @@ function dataReset() {
 }
 
 function dataEdit() {
-  var edit = document.getElementById("editBtn");
-  edit.innerText = "完了";
-  edit.setAttribute("ID", "doneBtn");
-    getCELL();
-
-  var done = document.getElementById("doneBtn");
-  doneBtn.addEventListener('click', function() {
-    done.innerText = "編集";
-    done.setAttribute("ID", "editBtn");
-  });
+  if(editBtn.innerText == "編集") {
+    editBtn.innerText = "完了";
+    editBtn.style.backgroundColor = '#ffadad';
+    BtnDisabled();
+      getCELL();
+  } else if(editBtn.innerText = "完了") {
+    var plusBtn = document.getElementById("plusBtn");
+    var minusBtn = document.getElementById("minusBtn");
+    if (plusBtn) {
+      plusBtn.parentNode.removeChild(plusBtn);
+      minusBtn.parentNode.removeChild(minusBtn);
+    }
+    editBtn.innerText = "編集";
+    editBtn.style.backgroundColor = '#f8f8f8';
+    unBtnDisabled();
+  }
 }
 
+function BtnDisabled() {
+    $(document).ready(function(){
+    $(".input-area, .result-area, #extBtn, #deleteBtn").css({
+      "opacity":"0.4",
+      "pointer-events":"none"
+    });
+  });
+}
+function unBtnDisabled() {
+  $(document).ready(function(){
+  $(".input-area, .result-area, #extBtn, #deleteBtn").css({
+    "opacity":"1",
+    "pointer-events":"auto"
+  });
+});
+}
+
+var Dfcount;
+
 function getCELL(){
-   // var countgetCell ++;
-   //  if(countgetCell > 1) {
-   //    console.log('1');
-   //  } else {
-   //    console.log('0');
-   //  }
    var myTbl = document.getElementById('table_f_body');
   　for (var i=0; i<myTbl.rows.length; i++) {
      for (var j=2; j<myTbl.rows[i].cells.length; j++) {
   　　var Cells=myTbl.rows[i].cells[j];
+      Dfcount = Cells.innerText;
   　　 Cells.onclick =function(){Mclk(this);} // onclickで 'Mclk'を実行。
            }
          }
 }
 
 function Mclk(Cell) {
-  Cell.innerHTML = '<i class="fa fa-plus" aria-hidden="true"></i>' + Cell.innerText + '<i class="fa fa-minus" aria-hidden="true"></i>';
-  // countgetCell ++;
+    if(editBtn.innerText == "完了") {
+  var plusBtn = document.getElementById("plusBtn");
+  var minusBtn = document.getElementById("minusBtn");
+  if (plusBtn) {
+    plusBtn.parentNode.removeChild(plusBtn);
+    minusBtn.parentNode.removeChild(minusBtn);
+  }
+  Cell.innerHTML = '<input id="plusBtn" type="button" value="+">' + Cell.innerText + '<input id="minusBtn" type="button" value="ー">';
+  if(Cell.innerText > 0) {
+    Cell.innerHTML = '<a id="getcell">' + Cell.innerHTML + '</a>'
+  }
+
+  var plusBtn = document.getElementById("plusBtn");
+  var minusBtn = document.getElementById("minusBtn");
+
+    plusBtn.addEventListener('click', function() {
+      if(Cell.innerText < 10) {
+        Cell.innerText ++;
+      } else {
+        //ボタンが消えるか、透明度を落とすかしたい
+      }
+    });
+    minusBtn.addEventListener('click', function() {
+      if(Cell.innerText > 0) {
+        Cell.innerText --;
+      }
+    });
+    Recalculation();
+
+
+    //回数で何行目か検索
+    if(Dfcount != Cell.innerText) {
+      var nCount = Cell.innerText;
+      var myTbl = document.getElementById('table_f_body');
+      var i = (Cell.parentNode.rowIndex -5);
+      var tdcount = Cell.cellIndex;
+      var tableCount = myTbl.rows[i].cells[1];
+      tableCount = tableCount.innerText;
+
+      var userDataA = localStorage.getItem('userDataStr');
+      userDataA = JSON.parse(userDataA);
+
+
+
+      var newData = userDataA.filter(function(item, index){
+        if (item.count != tableCount) return true;
+      });
+
+      var changeData = userDataA.filter(function(item, index){
+        if (item.count == tableCount) return true;
+      });
+
+
+
+      var Gcount;
+      switch (tdcount) {
+          case 2:
+            changeData[0].F2 = nCount;
+            break;
+          case 3:
+            changeData[0].F3 = nCount;
+            break;
+          case 4:
+            changeData[0].S3 = nCount;
+            break;
+      }
+      newData.push(changeData[0]);
+
+      //並び替え
+      newData.sort(function(a,b){
+        if(a.count<b.count) return -1;
+        if(a.count > b.count) return 1;
+        return 0;
+      });
+
+      localStorage.setItem("userDataStr", JSON.stringify(newData));
+    }
+}
 }
 
 
@@ -568,13 +665,13 @@ function dataSave() {
       day = year + "/" + month + "/" + day + " " + hour + ":" + minute;
 
 
-      //jsonに保存
+      //jsonを取得
       var userData = localStorage.getItem('userDataStr');
       userData = JSON.parse(userData);
 
       //json形式データを追加する
       var addData =
-      {"data": day,"count": length,"F2": cntA,"F3": cntB,"S3": cntC};
+      {"date": day,"count": length, F2: cntA, F3: cntB, S3: cntC};
       userData.push(addData);
 
      // 追加データごと格納
