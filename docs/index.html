@@ -5,70 +5,77 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>WebApp</title>
         <meta name="description" content="Webapp">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
 
         <link rel="manifest" href="site.webmanifest">
         <link rel="apple-touch-icon" href="icon.png">
         <!-- favicon.icoはルートディレクトに配置 -->
 
         <link rel="stylesheet" href="css/normalize.css">
+        <!-- BootstrapのCSS読み込み -->
         <link rel="stylesheet" href="css/styles.css">
-        <link rel="stylesheet" href="css/font-awesome.css">
+        <link href="css/bootstrap.css" rel="stylesheet">
     </head>
     <body>
 
         <div class="container">
+          <div class="result-area">
+              <div id="result-item-A"></div>
+              <div id="result-item-B"></div>
+              <div id="result-item-C"></div>
+          </div>
           <div class="input-area">
-            <a id="item-btn-A">F2</a>
-            <a id="item-btn-B">F3</a>
-            <a id="item-btn-C">S3</a>
+              <div id="item-btn-A">F2</div>
+              <div id="item-btn-B">F3</div>
+              <div id="item-btn-C">S3</div>
+          </div>
+          <div class="output-area">
               <div id="input-btn">入力</div>
               <div id="reset-btn">リセット</div>
           </div>
-          <div class="result-area">
-              <span id="result-item-A"></span>
-              <span id="result-item-B"></span>
-              <span id="result-item-C"></span>
-          </div>
+
+          <hr class="style">
+
           <div class="edit-area">
-              <span id="editBtn">編集</span>
-              <span id="extBtn">データ出力(未実装)</span>
-              <span id="deleteBtn">データ全削除</span>
+              <div id="editBtn">編集</div>
+              <div id="extBtn">データ出力(未実装)</div>
+              <div id="deleteBtn">データ全削除</div>
           </div>
 
         <table id="table_f" border="1">
           <thead>
             <tr>
               <th class="col0" rowspan="2">S3が出てから</th>
-              <th class="col1" id="t_title">確率</th>
+              <th class="col1 t_title">確率</th>
               <th class="col2" id="formulaS1">0%</th>
               <th class="col3" id="formulaS2">0%</th>
               <th class="col4" id="formulaS3">0%</th>
             </tr>
             <tr>
-              <th id="t_title">合計</th>
-              <th id="totalS1">0</th>
-              <th id="totalS2">0</th>
-              <th id="totalS3">0</th>
-            </tr>
-              <th rowspan="2">累計</th>
-              <th id="t_title">確率</th>
-              <th id="formula1">0%</th>
-              <th id="formula2">0%</th>
-              <th id="formula3">0%</th>
+              <th class="col1 t_title">合計</th>
+              <th class="col2" id="totalS1">0</th>
+              <th class="col3" id="totalS2">0</th>
+              <th class="col4" id="totalS3">0</th>
             </tr>
             <tr>
-              <th id="t_title">合計</th>
-              <th id="total1">0</th>
-              <th id="total2">0</th>
-              <th id="total3">0</th>
+              <th class="col0" rowspan="2">累計</th>
+              <th class="col1 t_title">確率</th>
+              <th class="col2" id="formula1">0%</th>
+              <th class="col3" id="formula2">0%</th>
+              <th class="col4" id="formula3">0%</th>
+            </tr>
+            <tr>
+              <th class="col1 t_title">合計</th>
+              <th class="col2" id="total1">0</th>
+              <th class="col3" id="total2">0</th>
+              <th class="col4" id="total3">0</th>
             </tr>
             <tr id="tf_title">
-              <th>日付</th>
-              <th>回数</th>
-              <th>F2</th>
-              <th>F3</th>
-              <th>S3</th>
+              <th class="col0">日付</th>
+              <th class="col1">回数</th>
+              <th class="col2">F2</th>
+              <th class="col3">F3</th>
+              <th class="col4">S3</th>
             </tr>
           </thead>
           <tbody id="table_f_body" >
@@ -76,7 +83,10 @@
         </table>
         </div>
 
-        <script type="text/javascript" src="js/main.js"></script>
+
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+        <script src="js/bootstrap.js"></script>
     </body>
 </html>

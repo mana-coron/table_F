@@ -1,20 +1,25 @@
 (function() {
   'use strict';
 
-
+//ブラウザ上のデータを取得
 function jsonGet() {
+  var userData = [];
+  userData = localStorage.getItem('userDataStr');
 
-  var userData = localStorage.getItem('userDataStr');
-  userData = JSON.parse(userData);
-
+  //初期ユーザかそうでないかの判断
   if(!userData){
+    console.log("no");
+    //念のため初期化
     localStorage.removeItem("userDataStr");
-    var userData = [];
-    localStorage.setItem('userDataStr', JSON.stringify(userData));
 
   } else {
+    //userDataをjson形式に変換、加工出来るようにする
+    userData = JSON.parse(userData);
+
+    //テーブルにjsonにuserDataを書き込んでいく
     var tbody = document.getElementById("table_f_body");
 
+    //セルを必要分用意
      for (var i = 0; i < userData.length; i++) {
        var row = tbody.insertRow(0);
        var cell0 = row.insertCell(-1);
@@ -23,35 +28,36 @@ function jsonGet() {
        var cell3 = row.insertCell(-1);
        var cell4 = row.insertCell(-1);
 
+       //幅を指定したclass名をつける
+       cell0.className = 'col0';
+       cell1.className = 'col1';
+       cell2.className = 'col2 edit-cell';
+       cell3.className = 'col3 edit-cell';
+       cell4.className = 'col4 edit-cell';
 
-       cell0.className = 'col0'
-       cell1.className = 'col1'
-       cell2.className = 'col2 edit-cell'
-       cell3.className = 'col3 edit-cell'
-       cell4.className = 'col4 edit-cell'
-
-       cell0.innerHTML = userData[i]["date"];
-       cell1.innerHTML =  '<span id="count">' + userData[i]["count"] +  '</span>';
-       cell2.innerHTML = userData[i]["F2"];
-       cell3.innerHTML = userData[i]["F3"];
-       cell4.innerHTML = userData[i]["S3"];
+       cell0.innerHTML = userData[i].date; //日付
+       cell1.innerHTML =  '<span id="count">' + userData[i].count +  '</span>';　//回数、回数用のクラスもつける
+       cell2.innerHTML = userData[i].F2;
+       cell3.innerHTML = userData[i].F3;
+       cell4.innerHTML = userData[i].S3;
 
        //１以上のときは赤文字にする
        if(cell2.innerText > 0) {
-         cell2.innerHTML = '<a id="getcell">' + cell2.innerHTML + '</a>'
+         cell2.innerHTML = '<a id="getcell">' + cell2.innerHTML + '</a>';
        }
        if(cell3.innerText > 0) {
-         cell3.innerHTML = '<a id="getcell">' + cell3.innerHTML + '</a>'
+         cell3.innerHTML = '<a id="getcell">' + cell3.innerHTML + '</a>';
        }
        if(cell4.innerText > 0) {
          cntS = 0;
-         cell4.innerHTML = '<a id="getcell">' + cell4.innerHTML + '</a>'
+         cell4.innerHTML = '<a id="getcell">' + cell4.innerHTML + '</a>';
        }
        cntS ++;
    }
+   //再計算して表に出力
    Recalculation();
   }
-};
+}
 
 //再計算
 function Recalculation() {
@@ -59,7 +65,7 @@ function Recalculation() {
   var tr = tbody.getElementsByTagName("tr");
   var td = tr[0].getElementsByTagName("td");
   var getcount = td[1].innerText;
-  length = getcount;
+  kaisu = getcount;
 
   //累計計算
   var sum = tatecalc("table_f_body", 0, 1, 2, 3, 4); //td[0], td[1], td[4] の合計値が配列で返ってくる
@@ -71,7 +77,7 @@ function Recalculation() {
 
     for(var i = 1; i < 5; i++) {
       var n = 2 ;	// 小数点第n位まで残す
-      sum[i] = Math.floor( (sum[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
+      sum[i] = Math.floor( (sum[i] / kaisu*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
     }
     formula1.innerHTML = sum[1] + "%";
     formula2.innerHTML = sum[2] + "%";
@@ -100,10 +106,10 @@ function Recalculation() {
 }
 
 
-var cntA = 0;
-var cntB = 0;
-var cntC = 0;
-var cntS = 0;
+var cntA = 0; //F2
+var cntB = 0; //F3
+var cntC = 0; //S3
+var cntS = 0; //１以上出るたびにリセットするS3
 var day;
 
 
@@ -124,7 +130,7 @@ var extBtn = document.getElementById('extBtn');
 var deleteBtn = document.getElementById('deleteBtn');
 
 
-
+//リアルタイムでカウントを出力
 function countUpA(){
   cntA++;
   document.getElementById("result-item-A").innerHTML=cntA;
@@ -138,7 +144,7 @@ function countUpC(){
   document.getElementById("result-item-C").innerHTML=cntC;
 }
 
-
+//jsonではなくブラウザ更新時のリセット
 function dataReset() {
   cntA = '0';
   cntB = '0';
@@ -176,18 +182,20 @@ function dataEdit() {
 
 function BtnDisabled() {
     $(document).ready(function(){
-    $(".input-area, .result-area, #extBtn, #deleteBtn").css({
+    $(".input-area, .output-area, .result-area, #extBtn, #deleteBtn").css({
       "opacity":"0.4",
       "pointer-events":"none"
     });
+    $('.edit-cell').css('background','#f2fbff');
   });
 }
 function unBtnDisabled() {
   $(document).ready(function(){
-  $(".input-area, .result-area, #extBtn, #deleteBtn").css({
+  $(".input-area, .output-area, .result-area, #extBtn, #deleteBtn").css({
     "opacity":"1",
     "pointer-events":"auto"
   });
+  $('.edit-cell').css('background','#fff');
 });
 }
 
@@ -297,7 +305,7 @@ function dataDelete() {
 
     if(result) {
       dataReset();
-      length = 0;
+      kaisu = 0;
       var table = document.getElementById("table_f_body");
       while (table.rows.length > 0) table.deleteRow(0);
       formula1.innerHTML = "0%";
@@ -313,8 +321,8 @@ function dataDelete() {
       totalS2.innerHTML = 0;
       totalS3.innerHTML =0;
       localStorage.removeItem("userDataStr");
-      var userData = [];
-      localStorage.setItem('userDataStr', JSON.stringify(userData));
+      //var userData ;
+      //localStorage.setItem('userDataStr', JSON.stringify(userData));
     }
 
 }
@@ -363,7 +371,7 @@ inputBtn.addEventListener('click', function() {
 
     for(var i = 1; i < 5; i++) {
       var n = 2 ;	// 小数点第n位まで残す
-      sum[i] = Math.floor( (sum[i] / length*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
+      sum[i] = Math.floor( (sum[i] / kaisu*10) * Math.pow( 10, n ) ) / Math.pow( 10, n );
     }
     formula1.innerHTML = sum[1] + "%";
     formula2.innerHTML = sum[2] + "%";
@@ -612,7 +620,7 @@ function Scalc(tableID) {
 		//結果を入れた<td>を作って<tr>へ次々に追加していく
 		for (i = 0; i < sum.length; i++) {
 			text = (sum[i] >= 0) ? (sum[i] /1000) : ""; //sum[j] を小数に戻す
-			td = d.createElement("td");
+			let td = d.createElement("td");
 			td.appendChild(d.createTextNode(text)); //ちょっとズボラな書き方
 			newtr.appendChild(td);
 		}
@@ -640,8 +648,9 @@ function Scalc(tableID) {
 }
 
 
-var length = 0;
+var kaisu = 0;
 
+//jsonへ保存とtableへの反映
 function dataSave() {
       var i = -1;
 
@@ -653,7 +662,7 @@ function dataSave() {
       var cell3 = row.insertCell(i);
       var cell4 = row.insertCell(i);
 
-      length  ++;
+      kaisu  ++;
 
       //日付取得
       var date = new Date();
@@ -671,22 +680,31 @@ function dataSave() {
 
       //json形式データを追加する
       var addData =
-      {"date": day,"count": length, F2: cntA, F3: cntB, S3: cntC};
-      userData.push(addData);
+      {"date": day,"count": kaisu, F2: cntA, F3: cntB, S3: cntC};
 
-     // 追加データごと格納
+      if(userData) {
+        //配列の最後尾に追加
+        userData[userData.length] = addData;
+      } else {
+        //配列の最初に追加
+        userData = [];
+        userData[0] = addData;
+      }
+
+      console.log(userData);
+     // データを更新、格納
       localStorage.setItem("userDataStr", JSON.stringify(userData));
 
 
       //1以上のときは文字に装飾
       if(cntA > 0) {
-        cntA = '<a id="getcell">' + cntA + '</a>'
+        cntA = '<a id="getcell">' + cntA + '</a>';
       }
       if(cntB > 0) {
-        cntB = '<a id="getcell">' + cntB + '</a>'
+        cntB = '<a id="getcell">' + cntB + '</a>';
       }
       if(cntC > 0) {
-        cntC = '<a id="getcell">' + cntC + '</a>'
+        cntC = '<a id="getcell">' + cntC + '</a>';
       }
 
       cell0.className = 'col0';
@@ -697,7 +715,7 @@ function dataSave() {
 
 
       cell0.innerHTML = day;
-      cell1.innerHTML = '<span id="count">' + length + '</span>';
+      cell1.innerHTML = '<span id="count">' + kaisu + '</span>';
       cell2.innerHTML = cntA;
       cell3.innerHTML = cntB;
       cell4.innerHTML = cntC;
